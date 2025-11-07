@@ -1,16 +1,16 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Application.Interfaces;
+using Application.Interfaces.IServices;
 using Domain.Entities;
 
 namespace Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class StudentsController : ControllerBase
+    public class StudentController : ControllerBase
     {
         private readonly IStudentServices _service;
 
-        public StudentsController(IStudentServices service)
+        public StudentController(IStudentServices service)
         {
             _service = service;
         }
@@ -41,9 +41,9 @@ namespace Api.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateStudent(int id, [FromBody] Student student)
+        public async Task<IActionResult> UpdateStudent([FromBody] Student student)
         {
-            await _service.UpdateAsync(id,student);
+            await _service.UpdateAsync(student);
             return Ok("Student updated successfully!");
         }
 

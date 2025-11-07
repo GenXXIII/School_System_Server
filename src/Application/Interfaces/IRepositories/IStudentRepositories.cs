@@ -1,12 +1,12 @@
 ﻿using Domain.Entities;
 
-namespace Application.Interfaces;
+namespace Application.Interfaces.IRepositories;
 
-public interface IStudentServices
+public interface IStudentRepositories
 {
     Task<IEnumerable<Student>> GetAllAsync();
     Task<Student?> GetByIdAsync(int id);
     Task AddAsync(Student student);
-    Task UpdateAsync(int id ,Student student);
+    Task UpdateAsync(Student student);
     Task RemoveAsync(int id);
 }

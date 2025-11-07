@@ -1,4 +1,4 @@
-﻿using Application.Interfaces;
+﻿using Application.Interfaces.IRepositories;
 using Domain.Entities;
 using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
@@ -26,14 +26,20 @@ public class StudentRepositories : IStudentRepositories
         await _context.SaveChangesAsync();
     }
 
-    public async Task UpdateAsync(int id,Student student)
+    public async Task UpdateAsync(Student student)
     {
-        var students = await _context.Students.FindAsync(id);
-        if (students != null)
+        var existstudent = await _context.Students.FindAsync(student.Id);
+        if (existstudent != null)
         {
-            _context.Students.Update(student);
-            await _context.SaveChangesAsync();
+            existstudent.StudentId = student.StudentId;
+            existstudent.FullName = student.FullName;
+            existstudent.Gender = student.Gender;
+            existstudent.BirthDate = student.BirthDate;
+            existstudent.Address = student.Address;
+            existstudent.Email = student.Email;
+            existstudent.Phone = student.Phone;
         }
+        await _context.SaveChangesAsync();
     }
 
     public async Task RemoveAsync(int id)

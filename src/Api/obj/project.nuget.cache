@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "tXKX6RRgOJc=",
+  "dgSpecHash": "FXSCdGLFIeU=",
   "success": true,
-  "projectFilePath": "D:\\Coding\\Project\\School System Management\\School System Server\\src\\Api\\Api.csproj",
+  "projectFilePath": "D:\\Coding\\Project\\School System Management\\School System Server\\src\\api\\Api.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\yimbu\\.nuget\\packages\\humanizer.core\\2.14.1\\humanizer.core.2.14.1.nupkg.sha512",
     "C:\\Users\\yimbu\\.nuget\\packages\\microsoft.aspnetcore.openapi\\9.0.6\\microsoft.aspnetcore.openapi.9.0.6.nupkg.sha512",

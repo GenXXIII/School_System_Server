@@ -9,3 +9,4 @@ D:\Coding\Project\School System Management\School System Server\src\Domain\obj\D
 D:\Coding\Project\School System Management\School System Server\src\Domain\obj\Debug\net9.0\refint\Domain.dll
 D:\Coding\Project\School System Management\School System Server\src\Domain\obj\Debug\net9.0\Domain.pdb
 D:\Coding\Project\School System Management\School System Server\src\Domain\obj\Debug\net9.0\ref\Domain.dll
+D:\Coding\Project\School System Management\School System Server\src\Domain\obj\Debug\net9.0\Domain.sourcelink.json
