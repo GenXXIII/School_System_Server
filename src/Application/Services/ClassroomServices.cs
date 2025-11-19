@@ -7,7 +7,6 @@ namespace Application.Services;
 public class ClassroomServices :IClassroomServices
 {
     private readonly IClassroomRepositories _repo;
-
     public ClassroomServices(IClassroomRepositories repo)
     {
         _repo = repo;

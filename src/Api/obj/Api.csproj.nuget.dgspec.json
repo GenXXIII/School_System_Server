@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "D:\\Coding\\Project\\School System Management\\School System Server\\src\\api\\Api.csproj": {}
+    "D:\\Coding\\Project\\School System Management\\School System Server\\src\\Api\\Api.csproj": {}
   },
   "projects": {
-    "D:\\Coding\\Project\\School System Management\\School System Server\\src\\api\\Api.csproj": {
+    "D:\\Coding\\Project\\School System Management\\School System Server\\src\\Api\\Api.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\Coding\\Project\\School System Management\\School System Server\\src\\api\\Api.csproj",
+        "projectUniqueName": "D:\\Coding\\Project\\School System Management\\School System Server\\src\\Api\\Api.csproj",
         "projectName": "Api",
-        "projectPath": "D:\\Coding\\Project\\School System Management\\School System Server\\src\\api\\Api.csproj",
+        "projectPath": "D:\\Coding\\Project\\School System Management\\School System Server\\src\\Api\\Api.csproj",
         "packagesPath": "C:\\Users\\yimbu\\.nuget\\packages\\",
-        "outputPath": "D:\\Coding\\Project\\School System Management\\School System Server\\src\\api\\obj\\",
+        "outputPath": "D:\\Coding\\Project\\School System Management\\School System Server\\src\\Api\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -174,6 +174,16 @@
       "frameworks": {
         "net9.0": {
           "targetAlias": "net9.0",
+          "dependencies": {
+            "Mapster": {
+              "target": "Package",
+              "version": "[7.4.0, )"
+            },
+            "Mapster.DependencyInjection": {
+              "target": "Package",
+              "version": "[1.0.1, )"
+            }
+          },
           "imports": [
             "net461",
             "net462",

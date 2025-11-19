@@ -6,6 +6,5 @@ public class Classroom
     public string? ClassId { get; set; }
     public string? Classname { get; set; }
     public int RoomNumber { get; set; }
-
     public string? Building { get; set; }
 }

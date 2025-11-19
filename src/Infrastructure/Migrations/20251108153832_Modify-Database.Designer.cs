@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20251106204513_None-Relate")]
-    partial class NoneRelate
+    [Migration("20251108153832_Modify-Database")]
+    partial class ModifyDatabase
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -70,25 +70,6 @@ namespace Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Courses");
-                });
-
-            modelBuilder.Entity("Domain.Entities.Grade", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("GradeId")
-                        .HasColumnType("text");
-
-                    b.Property<int>("Score")
-                        .HasColumnType("integer");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Grades");
                 });
 
             modelBuilder.Entity("Domain.Entities.Student", b =>

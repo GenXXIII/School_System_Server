@@ -1,10 +1,13 @@
 {
   "version": 2,
-  "dgSpecHash": "FXSCdGLFIeU=",
+  "dgSpecHash": "0eU91Mj2KHA=",
   "success": true,
-  "projectFilePath": "D:\\Coding\\Project\\School System Management\\School System Server\\src\\api\\Api.csproj",
+  "projectFilePath": "D:\\Coding\\Project\\School System Management\\School System Server\\src\\Api\\Api.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\yimbu\\.nuget\\packages\\humanizer.core\\2.14.1\\humanizer.core.2.14.1.nupkg.sha512",
+    "C:\\Users\\yimbu\\.nuget\\packages\\mapster\\7.4.0\\mapster.7.4.0.nupkg.sha512",
+    "C:\\Users\\yimbu\\.nuget\\packages\\mapster.core\\1.2.1\\mapster.core.1.2.1.nupkg.sha512",
+    "C:\\Users\\yimbu\\.nuget\\packages\\mapster.dependencyinjection\\1.0.1\\mapster.dependencyinjection.1.0.1.nupkg.sha512",
     "C:\\Users\\yimbu\\.nuget\\packages\\microsoft.aspnetcore.openapi\\9.0.6\\microsoft.aspnetcore.openapi.9.0.6.nupkg.sha512",
     "C:\\Users\\yimbu\\.nuget\\packages\\microsoft.bcl.asyncinterfaces\\7.0.0\\microsoft.bcl.asyncinterfaces.7.0.0.nupkg.sha512",
     "C:\\Users\\yimbu\\.nuget\\packages\\microsoft.build.framework\\17.8.3\\microsoft.build.framework.17.8.3.nupkg.sha512",

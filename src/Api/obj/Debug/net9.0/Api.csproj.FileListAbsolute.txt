@@ -139,3 +139,6 @@ D:\Coding\Project\School System Management\School System Server\src\Api\obj\Debu
 D:\Coding\Project\School System Management\School System Server\src\Api\obj\Debug\net9.0\Api.genruntimeconfig.cache
 D:\Coding\Project\School System Management\School System Server\src\Api\obj\Debug\net9.0\ref\Api.dll
 D:\Coding\Project\School System Management\School System Server\src\Api\obj\Debug\net9.0\Api.sourcelink.json
+D:\Coding\Project\School System Management\School System Server\src\api\bin\Debug\net9.0\Mapster.dll
+D:\Coding\Project\School System Management\School System Server\src\api\bin\Debug\net9.0\Mapster.Core.dll
+D:\Coding\Project\School System Management\School System Server\src\api\bin\Debug\net9.0\Mapster.DependencyInjection.dll

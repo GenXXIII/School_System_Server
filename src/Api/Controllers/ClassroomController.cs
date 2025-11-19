@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Application.Interfaces.IServices;
 using Domain.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace Api.Controllers
 {
@@ -15,43 +16,90 @@ namespace Api.Controllers
             _service = service;
         }
 
-        [HttpGet] 
-        public async Task<IActionResult> GetAllClassroom()
+        // GET: api/Classroom
+        [HttpGet]
+        public async Task<IActionResult> GetAllClass()
         {
-            var classrooms = await _service.GetAllAsync();
-            return Ok(classrooms);
-        }
-
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetClassroomById(int id)
-        {
-            var classrooms = await _service.GetByIdAsync(id);
-            if (classrooms ==null)
+            try
             {
-                return NotFound("Classroom is not found");
+                var classrooms = await _service.GetAllAsync();
+                return Ok(classrooms);
             }
-
-            return Ok(classrooms);
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { error = $"Error retrieving classroom: {ex.Message}" });
+            }
         }
+        // GET: api/Classroom/id
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetClassById(int id)
+        {
+            try
+            {
+                var classroom = await _service.GetByIdAsync(id);
+                if (classroom == null)
+                    return NotFound(new { error = "Class not found" });
+                return Ok(classroom);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { error = $"Error retrieving class: {ex.Message}" });
+            }
+        }
+
+        // POST: api/Classroom
         [HttpPost]
-        public async Task<IActionResult> AddClassroom([FromBody] Classroom classroom)
+        public async Task<IActionResult> AddClass([FromBody] Classroom classroom)
         {
-            await _service.AddAsync(classroom);
-            return Ok("Classroom added successfully!");
+            try
+            {
+                await _service.AddAsync(classroom);
+                // Return the newly created course as JSON
+                return CreatedAtAction(
+                    nameof(GetClassById),
+                    new { id = classroom.Id },
+                    new { message = "Classroom added successfully!", classroom }
+                );
+            }
+            catch (DbUpdateException dbEx)
+            {
+                return BadRequest(new { error = dbEx.InnerException?.Message ?? dbEx.Message });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { error = ex.Message });
+            }
         }
 
+        // PUT: api/Classroom/id
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateClassroom([FromBody] Classroom classroom)
+        public async Task<IActionResult> UpdateClass(int id, [FromBody] Classroom classroom)
         {
-            await _service.UpdateAsync(classroom);
-            return Ok("Classroom updated successfully!");
+            if (classroom.Id != id)
+                classroom.Id = id;
+            try
+            {
+                await _service.UpdateAsync(classroom);
+                return Ok(new { message = "Classroom updated successfully!", classroom });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { error = ex.Message });
+            }
         }
-
+        // DELETE: api/Classroom/id
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteClassroom(int id)
+        public async Task<IActionResult> DeleteCLass(int id)
         {
-            await _service.RemoveAsync(id);
-            return Ok("Classroom deleted successfully!");
+            try
+            {
+                await _service.RemoveAsync(id);
+                return Ok(new { message = "CLass deleted successfully!" });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { error = ex.Message });
+            }
         }
     }
 }
