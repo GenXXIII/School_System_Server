@@ -1,6 +1,8 @@
-﻿using Application.Interfaces.IServices;
+﻿using Application.DTOs.CourseDTO;
 using Application.Interfaces.IRepositories;
+using Application.Interfaces.IServices;
 using Domain.Entities;
+using Mapster;
 
 namespace Application.Services;
 
@@ -13,9 +15,33 @@ public class CourseServices : ICourseServices
         _repo = repo;
     }
 
-    public async Task<IEnumerable<Course>> GetAllAsync() => await _repo.GetAllAsync();
-    public async Task<Course?> GetByIdAsync(int id) => await _repo.GetByIdAsync(id);
-    public async Task AddAsync(Course course) => await _repo.AddAsync(course);
-    public async Task UpdateAsync(Course course) => await _repo.UpdateAsync(course);
-    public async Task RemoveAsync(int id) => await _repo.RemoveAsync(id);
+    public async Task<IEnumerable<CourseDto>> GetAllAsync()
+    {
+        var courses = await _repo.GetAllAsync();
+        return courses.Adapt<IEnumerable<CourseDto>>();
+    }
+
+    public async Task<CourseDto?> GetByIdAsync(int id)
+    {
+        var course = await _repo.GetByIdAsync(id);
+        return course?.Adapt<CourseDto>();
+    }
+
+    public async Task AddAsync(CourseCreateDto dto)
+    {
+        var course = dto.Adapt<Course>();
+        await _repo.AddAsync(course);
+    }
+
+    public async Task UpdateAsync(int id, CourseUpdateDto dto)
+    {
+        var course = dto.Adapt<Course>();
+        course.Id = id;
+        await _repo.UpdateAsync(course);
+    }
+
+    public async Task RemoveAsync(int id)
+    {
+        await _repo.RemoveAsync(id);
+    }
 }

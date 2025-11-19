@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "0eU91Mj2KHA=",
+  "dgSpecHash": "sQ2jJc8yzsQ=",
   "success": true,
-  "projectFilePath": "D:\\Coding\\Project\\School System Management\\School System Server\\src\\Api\\Api.csproj",
+  "projectFilePath": "D:\\Coding\\Project\\School System Management\\School System Server\\src\\api\\Api.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\yimbu\\.nuget\\packages\\humanizer.core\\2.14.1\\humanizer.core.2.14.1.nupkg.sha512",
     "C:\\Users\\yimbu\\.nuget\\packages\\mapster\\7.4.0\\mapster.7.4.0.nupkg.sha512",

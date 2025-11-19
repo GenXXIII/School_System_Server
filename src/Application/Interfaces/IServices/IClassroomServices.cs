@@ -1,12 +1,12 @@
-﻿using Domain.Entities;
+﻿using Application.DTOs.ClassroomDTO;
 
 namespace Application.Interfaces.IServices;
 
 public interface IClassroomServices
 {
-    Task<IEnumerable<Classroom>> GetAllAsync();
-    Task<Classroom?> GetByIdAsync(int id);
-    Task AddAsync(Classroom classroom);
-    Task UpdateAsync(Classroom classroom);
+    Task<IEnumerable<ClassroomDto>> GetAllAsync();
+    Task<ClassroomDto?> GetByIdAsync(int id);
+    Task AddAsync(ClassroomCreateDto dto);
+    Task UpdateAsync(int id, ClassroomUpdateDto dto);
     Task RemoveAsync(int id);
 }
