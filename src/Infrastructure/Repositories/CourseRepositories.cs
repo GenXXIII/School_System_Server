@@ -13,16 +13,17 @@ public class CourseRepositories : ICourseRepositories
     {
         _context = context;
     }
-
+    /*{ Get All Course data from DB }*/
     public async Task<IEnumerable<Course>> GetAllAsync() => await _context.Courses.ToListAsync();
+    /*{ Get Course data from DB }*/
     public async Task<Course?> GetByIdAsync(int id) => await _context.Courses.FindAsync(id);
-
+    /*{ Add Course data from DB }*/
     public async Task AddAsync(Course course)
     {
         await _context.Courses.AddAsync(course);
         await _context.SaveChangesAsync();
     }
-
+    /*{ Update Course data from DB }*/
     public async Task UpdateAsync(Course course)
     {
         var existcourse = await _context.Courses.FindAsync(course.Id);
@@ -35,7 +36,7 @@ public class CourseRepositories : ICourseRepositories
         }
 
     }
-
+    /*{ Delete Course data from DB }*/
     public async Task RemoveAsync(int id)
     {
         var courses = await _context.Courses.FindAsync(id);

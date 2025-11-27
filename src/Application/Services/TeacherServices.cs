@@ -5,7 +5,7 @@ using Domain.Entities;
 using Mapster;
 
 namespace Application.Services;
-
+/*{ Communication between DB and Backend by using DTO }*/
 public class TeacherServices : ITeacherServices
 {
     private readonly ITeacherRepositories _repo;

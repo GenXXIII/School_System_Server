@@ -13,19 +13,19 @@ public class TeacherRepositories : ITeacherRepositories
     {
         _context = context;
     }
-
+    /*{ Get All Students data from DB }*/
     public async Task<IEnumerable<Teacher>> GetAllAsync() => 
         await _context.Teachers.ToListAsync();
-
+    /*{ Get Student data from DB }*/
     public async Task<Teacher?> GetByIdAsync(int id) =>
         await _context.Teachers.FindAsync(id);
-
+    /*{ Add Student data from DB }*/
     public async Task AddAsync(Teacher teacher)
     {
         await _context.Teachers.AddAsync(teacher);
         await _context.SaveChangesAsync();
     }
-
+    /*{ Update Student data from DB }*/
     public async Task UpdateAsync(Teacher teacher)
     {
         var existteacher = await _context.Teachers.FindAsync(teacher.Id);
@@ -40,7 +40,7 @@ public class TeacherRepositories : ITeacherRepositories
         }
         await _context.SaveChangesAsync();
     }
-
+    /*{ Delete Student data from DB }*/
     public async Task RemoveAsync(int id)
     {
         var teachers = await _context.Teachers.FindAsync(id);

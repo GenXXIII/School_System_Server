@@ -142,3 +142,7 @@ D:\Coding\Project\School System Management\School System Server\src\Api\obj\Debu
 D:\Coding\Project\School System Management\School System Server\src\api\bin\Debug\net9.0\Mapster.dll
 D:\Coding\Project\School System Management\School System Server\src\api\bin\Debug\net9.0\Mapster.Core.dll
 D:\Coding\Project\School System Management\School System Server\src\api\bin\Debug\net9.0\Mapster.DependencyInjection.dll
+D:\Coding\Project\School System Management\School System Server\src\api\bin\Debug\net9.0\FluentValidation.dll
+D:\Coding\Project\School System Management\School System Server\src\api\bin\Debug\net9.0\FluentValidation.AspNetCore.dll
+D:\Coding\Project\School System Management\School System Server\src\api\bin\Debug\net9.0\FluentValidation.DependencyInjectionExtensions.dll
+D:\Coding\Project\School System Management\School System Server\src\api\bin\Debug\net9.0\Newtonsoft.Json.dll

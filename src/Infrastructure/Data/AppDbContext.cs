@@ -5,9 +5,11 @@ namespace Infrastructure.Data;
 
 public class AppDbContext : DbContext
 {
+    /*{inherit option from EFCore}*/
     public AppDbContext(DbContextOptions options) : base(options)
     {
     }
+    /*{ Create Table }*/
     public DbSet<Student> Students => Set<Student>();
     public DbSet<Teacher> Teachers => Set<Teacher>();
     public DbSet<Course> Courses => Set<Course>();

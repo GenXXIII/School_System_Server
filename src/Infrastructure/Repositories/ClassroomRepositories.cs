@@ -13,15 +13,17 @@ public class ClassroomRepositories : IClassroomRepositories
     {
         _context = context;
     }
-
+    /*{Get All Classroom data from DB}*/
     public async Task<IEnumerable<Classroom>> GetAllAsync() => await _context.Classrooms.ToListAsync();
+    /*{Get Classroom data from DB}*/
     public async Task<Classroom?> GetByIdAsync(int id) => await _context.Classrooms.FindAsync(id);
+    /*{Add Classroom data from DB}*/
     public async Task AddAsync(Classroom classroom)
     {
         await _context.Classrooms.AddAsync(classroom);
         await _context.SaveChangesAsync();
     }
-
+    /*{Update Classroom data from DB}*/
     public async Task UpdateAsync(Classroom classroom)
     {
         var existclassroom = await _context.Classrooms.FindAsync(classroom.Id);
@@ -34,7 +36,7 @@ public class ClassroomRepositories : IClassroomRepositories
             await _context.SaveChangesAsync();
         }
     }
-
+    /*{Delete Classroom data from DB}*/
     public async Task RemoveAsync(int id)
     {
         var  classroom = await _context.Classrooms.FindAsync(id);

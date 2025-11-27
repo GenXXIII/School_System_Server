@@ -5,16 +5,14 @@ using Domain.Entities;
 using Mapster;
 
 namespace Application.Services;
-
+/*{ Communication between DB and Backend by using DTO }*/
 public class ClassroomServices : IClassroomServices
 {
     private readonly IClassroomRepositories _repo;
-
     public ClassroomServices(IClassroomRepositories repo)
     {
         _repo = repo;
     }
-
     public async Task<IEnumerable<ClassroomDto>> GetAllAsync()
     {
         var classrooms = await _repo.GetAllAsync();

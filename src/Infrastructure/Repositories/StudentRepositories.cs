@@ -13,19 +13,19 @@ public class StudentRepositories : IStudentRepositories
     {
         _context = context;
     }
-
+    /*{ Get All Students data from DB }*/
     public async Task<IEnumerable<Student>> GetAllAsync() =>
         await _context.Students.ToListAsync();
-
+    /*{ Get Student data from DB }*/
     public async Task<Student?> GetByIdAsync(int id) =>
         await _context.Students.FindAsync(id);
-
+    /*{ Add Student data from DB }*/
     public async Task AddAsync(Student student) {
         
         await _context.Students.AddAsync(student);
         await _context.SaveChangesAsync();
     }
-
+    /*{ Update Student data from DB }*/
     public async Task UpdateAsync(Student student)
     {
         var existstudent = await _context.Students.FindAsync(student.Id);
@@ -41,7 +41,7 @@ public class StudentRepositories : IStudentRepositories
         }
         await _context.SaveChangesAsync();
     }
-
+    /*{ Remove Student data from DB }*/
     public async Task RemoveAsync(int id)
     {
         var student = await _context.Students.FindAsync(id);
