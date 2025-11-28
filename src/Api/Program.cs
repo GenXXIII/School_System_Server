@@ -4,7 +4,6 @@ using Application.Interfaces.IServices;
 using Microsoft.EntityFrameworkCore;
 using Application.Services;
 using Infrastructure.Repositories;
-using Api.Converters;
 using Application.Mapping;
 using Application.Validators.Classroom;
 using Application.Validators.Course;
@@ -14,28 +13,30 @@ using Mapster;
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using Api.Middleware;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
-/* { Date Json Converter } */
+// ========== SERILOG ========== //
+Log.Logger = new LoggerConfiguration()
+    .ReadFrom.Configuration(builder.Configuration) // read from appsettings.json
+    .Enrich.FromLogContext()
+    .WriteTo.Console()
+    .WriteTo.File("Logs/log-.txt", rollingInterval: RollingInterval.Day)
+    .CreateLogger();
 
-builder.Services.AddControllers()
-    .AddJsonOptions(options =>
-    {
-        options.JsonSerializerOptions.Converters.Add(new DateOnlyJsonConverter());
-        options.JsonSerializerOptions.Converters.Add(new DateOnlyNullableJsonConverter());
-        options.JsonSerializerOptions.WriteIndented = true;
-    });
+builder.Host.UseSerilog();
+// ============================= //
 
-/* { Swagger Configuration } */
+builder.Services.AddControllers();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
-    c.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo 
-    { 
-        Title = "School System API", 
-        Version = "v1" 
+    c.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo
+    {
+        Title = "School System API",
+        Version = "v1"
     });
     c.MapType<DateOnly>(() => new Microsoft.OpenApi.Models.OpenApiSchema
     {
@@ -44,12 +45,8 @@ builder.Services.AddSwaggerGen(c =>
     });
 });
 
-/* { Connecting DB } */
-
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
-
-/* { Interface connecting } */
 
 builder.Services.AddScoped<IStudentRepositories, StudentRepositories>();
 builder.Services.AddScoped<IStudentServices, StudentServices>();
@@ -60,9 +57,10 @@ builder.Services.AddScoped<ICourseServices, CourseServices>();
 builder.Services.AddScoped<IClassroomRepositories, ClassroomRepositories>();
 builder.Services.AddScoped<IClassroomServices, ClassroomServices>();
 
-/* { Mapster configuration } */
-
+// Mapster
 TypeAdapterConfig.GlobalSettings.Scan(typeof(StudentMappingConfig).Assembly);
+
+// CORS
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowReactApp", policy =>
@@ -74,8 +72,7 @@ builder.Services.AddCors(options =>
     });
 });
 
-/* { Validation Configuration } */
-
+// Validators
 builder.Services.AddFluentValidationAutoValidation();
 builder.Services.AddValidatorsFromAssembly(typeof(StudentCreateValidator).Assembly);
 builder.Services.AddValidatorsFromAssembly(typeof(StudentUpdateValidator).Assembly);
@@ -93,9 +90,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-/* { Cors } */
-app.UseCors("AllowReactApp");
 
+app.UseCors("AllowReactApp");
 app.UseMiddleware<ExceptionMiddleware>();
 app.UseHttpsRedirection();
 app.MapControllers();

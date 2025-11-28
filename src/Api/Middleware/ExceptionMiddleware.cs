@@ -19,11 +19,11 @@ namespace Api.Middleware
         {
             try
             {
-                await _next(context); // Call next middleware
+                await _next(context);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, ex.Message);
+                _logger.LogError(ex, "Unhandled exception occurred");
                 await HandleExceptionAsync(context, ex);
             }
         }
@@ -32,34 +32,52 @@ namespace Api.Middleware
         {
             context.Response.ContentType = "application/json";
 
-            HttpStatusCode statusCode = HttpStatusCode.InternalServerError;
-            object? response = null;
+            HttpStatusCode status = HttpStatusCode.InternalServerError;
+            object responseBody;
 
             switch (exception)
             {
-                case ValidationException validationException:
-                    statusCode = HttpStatusCode.BadRequest;
-                    response = new
+                case ValidationException validationEx:
+                    status = HttpStatusCode.BadRequest;
+
+                    responseBody = new
                     {
-                        error = "Validation failed",
-                        details = validationException.Errors.Select(e => new { e.PropertyName, e.ErrorMessage })
+                        success = false,
+                        message = "Validation failed",
+                        errors = validationEx.Errors.Select(e => new
+                        {
+                            field = e.PropertyName,
+                            error = e.ErrorMessage
+                        })
                     };
                     break;
 
-                case KeyNotFoundException notFoundException:
-                    statusCode = HttpStatusCode.NotFound;
-                    response = new { error = notFoundException.Message };
+                case KeyNotFoundException notFoundEx:
+                    status = HttpStatusCode.NotFound;
+
+                    responseBody = new
+                    {
+                        success = false,
+                        message = notFoundEx.Message
+                    };
                     break;
 
                 default:
-                    statusCode = HttpStatusCode.InternalServerError;
-                    response = new { error = exception.Message };
+                    status = HttpStatusCode.InternalServerError;
+
+                    responseBody = new
+                    {
+                        success = false,
+                        message = "An unexpected error occurred",
+                        detail = exception.Message // you can hide this in production
+                    };
                     break;
             }
 
-            context.Response.StatusCode = (int)statusCode;
-            var json = JsonConvert.SerializeObject(response);
-            return context.Response.WriteAsync(json);
+            context.Response.StatusCode = (int)status;
+            return context.Response.WriteAsync(
+                JsonConvert.SerializeObject(responseBody)
+            );
         }
     }
 }

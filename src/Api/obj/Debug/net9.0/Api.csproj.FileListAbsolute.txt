@@ -146,3 +146,12 @@ D:\Coding\Project\School System Management\School System Server\src\api\bin\Debu
 D:\Coding\Project\School System Management\School System Server\src\api\bin\Debug\net9.0\FluentValidation.AspNetCore.dll
 D:\Coding\Project\School System Management\School System Server\src\api\bin\Debug\net9.0\FluentValidation.DependencyInjectionExtensions.dll
 D:\Coding\Project\School System Management\School System Server\src\api\bin\Debug\net9.0\Newtonsoft.Json.dll
+D:\Coding\Project\School System Management\School System Server\src\api\bin\Debug\net9.0\Serilog.dll
+D:\Coding\Project\School System Management\School System Server\src\api\bin\Debug\net9.0\Serilog.AspNetCore.dll
+D:\Coding\Project\School System Management\School System Server\src\api\bin\Debug\net9.0\Serilog.Extensions.Hosting.dll
+D:\Coding\Project\School System Management\School System Server\src\api\bin\Debug\net9.0\Serilog.Extensions.Logging.dll
+D:\Coding\Project\School System Management\School System Server\src\api\bin\Debug\net9.0\Serilog.Formatting.Compact.dll
+D:\Coding\Project\School System Management\School System Server\src\api\bin\Debug\net9.0\Serilog.Settings.Configuration.dll
+D:\Coding\Project\School System Management\School System Server\src\api\bin\Debug\net9.0\Serilog.Sinks.Console.dll
+D:\Coding\Project\School System Management\School System Server\src\api\bin\Debug\net9.0\Serilog.Sinks.Debug.dll
+D:\Coding\Project\School System Management\School System Server\src\api\bin\Debug\net9.0\Serilog.Sinks.File.dll
