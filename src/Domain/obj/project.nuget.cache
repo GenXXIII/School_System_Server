@@ -1,8 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "iFNAd2Yiibo=",
+  "dgSpecHash": "MgYknn85nD8=",
   "success": true,
   "projectFilePath": "D:\\Coding\\Project\\School System Management\\School System Server\\src\\Domain\\Domain.csproj",
-  "expectedPackageFiles": [],
+  "expectedPackageFiles": [
+    "C:\\Users\\yimbu\\.nuget\\packages\\scalar.aspnetcore\\2.11.6\\scalar.aspnetcore.2.11.6.nupkg.sha512"
+  ],
   "logs": []
 }

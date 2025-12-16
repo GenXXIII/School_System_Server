@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Application.Interfaces.IServices;
 using Application.DTOs.StudentDTO;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Api.Controllers;
 
@@ -16,6 +17,7 @@ public class StudentController : ControllerBase
     }
 
     [HttpGet]
+    [Authorize(Roles = "Admin")]
     public async Task<IActionResult> GetAllStudents()
     {
         var students = await _service.GetAllAsync();
