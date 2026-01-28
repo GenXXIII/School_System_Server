@@ -7,7 +7,6 @@ namespace Api.Controllers;
 
 [ApiController]
 [Route("api/users")]
-[Authorize(Roles = "GenXXIII")]
 public class UsersController : ControllerBase
 {
     private readonly IUserService _userService;

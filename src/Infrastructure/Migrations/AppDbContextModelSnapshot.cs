@@ -22,31 +22,6 @@ namespace Infrastructure.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("Domain.Entities.Classroom", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Building")
-                        .HasColumnType("text");
-
-                    b.Property<string>("ClassId")
-                        .HasColumnType("text");
-
-                    b.Property<string>("Classname")
-                        .HasColumnType("text");
-
-                    b.Property<int>("RoomNumber")
-                        .HasColumnType("integer");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Classrooms");
-                });
-
             modelBuilder.Entity("Domain.Entities.Course", b =>
                 {
                     b.Property<int>("Id")
@@ -61,12 +36,45 @@ namespace Infrastructure.Migrations
                     b.Property<string>("CourseName")
                         .HasColumnType("text");
 
-                    b.Property<string>("Desc")
+                    b.Property<int?>("DepartmentId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Time")
                         .HasColumnType("text");
+
+                    b.Property<int>("Year")
+                        .HasColumnType("integer");
 
                     b.HasKey("Id");
 
+                    b.HasIndex("DepartmentId");
+
                     b.ToTable("Courses");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Department", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Building")
+                        .HasColumnType("text");
+
+                    b.Property<string>("DepartmentId")
+                        .HasColumnType("text");
+
+                    b.Property<string>("DepartmentName")
+                        .HasColumnType("text");
+
+                    b.Property<int>("RoomNumber")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Departments");
                 });
 
             modelBuilder.Entity("Domain.Entities.Student", b =>
@@ -83,6 +91,9 @@ namespace Infrastructure.Migrations
                     b.Property<DateOnly>("BirthDate")
                         .HasColumnType("date");
 
+                    b.Property<int?>("DepartmentId")
+                        .HasColumnType("integer");
+
                     b.Property<string>("Email")
                         .HasColumnType("text");
 
@@ -98,7 +109,12 @@ namespace Infrastructure.Migrations
                     b.Property<string>("StudentId")
                         .HasColumnType("text");
 
+                    b.Property<int>("Year")
+                        .HasColumnType("integer");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("DepartmentId");
 
                     b.ToTable("Students");
                 });
@@ -111,8 +127,11 @@ namespace Infrastructure.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Department")
-                        .HasColumnType("text");
+                    b.Property<int?>("CourseId")
+                        .HasColumnType("integer");
+
+                    b.Property<int?>("DepartmentId")
+                        .HasColumnType("integer");
 
                     b.Property<string>("Email")
                         .HasColumnType("text");
@@ -130,6 +149,10 @@ namespace Infrastructure.Migrations
                         .HasColumnType("text");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("CourseId");
+
+                    b.HasIndex("DepartmentId");
 
                     b.ToTable("Teachers");
                 });
@@ -160,6 +183,51 @@ namespace Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Users");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Course", b =>
+                {
+                    b.HasOne("Domain.Entities.Department", "Department")
+                        .WithMany("Courses")
+                        .HasForeignKey("DepartmentId");
+
+                    b.Navigation("Department");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Student", b =>
+                {
+                    b.HasOne("Domain.Entities.Department", "Department")
+                        .WithMany("Students")
+                        .HasForeignKey("DepartmentId");
+
+                    b.Navigation("Department");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Teacher", b =>
+                {
+                    b.HasOne("Domain.Entities.Course", "Course")
+                        .WithMany("Teachers")
+                        .HasForeignKey("CourseId");
+
+                    b.HasOne("Domain.Entities.Department", null)
+                        .WithMany("Teachers")
+                        .HasForeignKey("DepartmentId");
+
+                    b.Navigation("Course");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Course", b =>
+                {
+                    b.Navigation("Teachers");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Department", b =>
+                {
+                    b.Navigation("Courses");
+
+                    b.Navigation("Students");
+
+                    b.Navigation("Teachers");
                 });
 #pragma warning restore 612, 618
         }

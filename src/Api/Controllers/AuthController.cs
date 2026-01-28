@@ -1,9 +1,8 @@
-﻿using System.Security.Claims;
 using Application.DTOs.Auth;
 using Application.Interfaces;
-using Application.Interfaces.IServices;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.ComponentModel.DataAnnotations;
+using System;
 
 namespace Api.Controllers;
 
@@ -20,14 +19,32 @@ public class AuthController : ControllerBase
     [HttpPost("register")]
     public async Task<IActionResult> Register(RegisterRequest request)
     {
-        await _authService.RegisterAsync(request);
-        return Ok(new { message = "User registered successfully" });
+        try
+        {
+            await _authService.RegisterAsync(request);
+            return Ok(new { message = "User registered successfully" });
+        }
+        catch (ValidationException ex)
+        {
+            return BadRequest(new { error = ex.Message });
+        }
     }
 
     [HttpPost("login")]
     public async Task<IActionResult> Login(LoginRequest request)
     {
-        var token = await _authService.LoginAsync(request);
-        return Ok(new { message = "You Login Successfully", token });
+        try
+        {
+            var result = await _authService.LoginAsync(request);
+            return Ok(new { message = "You Login Successfully", token = result.Token });
+        }
+        catch (UnauthorizedAccessException ex)
+        {
+            return Unauthorized(new { error = ex.Message });
+        }
+        catch (ValidationException ex)
+        {
+            return BadRequest(new { error = ex.Message });
+        }
     }
 }

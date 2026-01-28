@@ -1,4 +1,4 @@
-﻿using System.Net;
+using System.Net;
 using FluentValidation;
 using Newtonsoft.Json;
 
@@ -52,6 +52,16 @@ namespace Api.Middleware
                     };
                     break;
 
+                case System.ComponentModel.DataAnnotations.ValidationException componentValidationEx:
+                    status = HttpStatusCode.BadRequest;
+
+                    responseBody = new
+                    {
+                        success = false,
+                        message = componentValidationEx.Message
+                    };
+                    break;
+
                 case KeyNotFoundException notFoundEx:
                     status = HttpStatusCode.NotFound;
 
@@ -59,6 +69,16 @@ namespace Api.Middleware
                     {
                         success = false,
                         message = notFoundEx.Message
+                    };
+                    break;
+
+                case UnauthorizedAccessException unauthorizedEx:
+                    status = HttpStatusCode.Unauthorized;
+
+                    responseBody = new
+                    {
+                        success = false,
+                        message = unauthorizedEx.Message
                     };
                     break;
 

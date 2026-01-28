@@ -1,4 +1,4 @@
-﻿using Application.Interfaces;
+using Application.Interfaces;
 using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
@@ -14,7 +14,7 @@ public class AppDbContext : DbContext, IAppDbContext
     public DbSet<Student> Students => Set<Student>();
     public DbSet<Teacher> Teachers => Set<Teacher>();
     public DbSet<Course> Courses => Set<Course>();
-    public DbSet<Classroom> Classrooms => Set<Classroom>();
+    public DbSet<Department> Departments => Set<Department>();
     public DbSet<User> Users => Set<User>();
 
 }

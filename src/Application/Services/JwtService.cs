@@ -18,10 +18,13 @@ public class JwtService : IJwtService
 
     public string GenerateToken(int userId, string email, string? role)
     {
-        var claims = new[]
+        if (string.IsNullOrWhiteSpace(role))
+            throw new Exception("User role is missing");
+
+        var claims = new List<Claim>
         {
-            new Claim(JwtRegisteredClaimNames.Sub, userId.ToString()),
-            new Claim(JwtRegisteredClaimNames.Email, email),
+            new Claim(ClaimTypes.NameIdentifier, userId.ToString()),
+            new Claim(ClaimTypes.Email, email),
             new Claim(ClaimTypes.Role, role)
         };
 

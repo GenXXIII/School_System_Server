@@ -1,4 +1,4 @@
-﻿using Application.Interfaces.IRepositories;
+using Application.Interfaces.IRepositories;
 using Domain.Entities;
 using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
@@ -15,10 +15,14 @@ public class StudentRepositories : IStudentRepositories
     }
     /*{ Get All Students data from DB }*/
     public async Task<IEnumerable<Student>> GetAllAsync() =>
-        await _context.Students.ToListAsync();
+        await _context.Students
+            .Include(s => s.Department)
+            .ToListAsync();
     /*{ Get Student data from DB }*/
     public async Task<Student?> GetByIdAsync(int id) =>
-        await _context.Students.FindAsync(id);
+        await _context.Students
+            .Include(s => s.Department)
+            .FirstOrDefaultAsync(s => s.Id == id);
     /*{ Add Student data from DB }*/
     public async Task AddAsync(Student student) {
         
@@ -38,6 +42,9 @@ public class StudentRepositories : IStudentRepositories
             existstudent.Address = student.Address;
             existstudent.Email = student.Email;
             existstudent.Phone = student.Phone;
+            existstudent.Address = student.Address;
+            existstudent.Year = student.Year;
+            existstudent.DepartmentId = student.DepartmentId;
         }
         await _context.SaveChangesAsync();
     }
@@ -50,5 +57,10 @@ public class StudentRepositories : IStudentRepositories
             _context.Students.Remove(student);
             await _context.SaveChangesAsync();
         }
+    }
+
+    public async Task<bool> IsStudentIdUniqueAsync(string studentId)
+    {
+        return !await _context.Students.AnyAsync(s => s.StudentId == studentId);
     }
 }

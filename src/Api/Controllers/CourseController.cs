@@ -1,11 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using Application.Interfaces.IServices;
 using Application.DTOs.CourseDTO;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Api.Controllers;
-
 [Route("api/[controller]")]
 [ApiController]
+[Authorize]
 public class CourseController : ControllerBase
 {
     private readonly ICourseServices _service;
@@ -16,6 +17,7 @@ public class CourseController : ControllerBase
     }
 
     [HttpGet]
+    [Authorize(Roles = "Admin,Teacher,Student")]
     public async Task<IActionResult> GetAllCourses()
     {
         var courses = await _service.GetAllAsync();
@@ -23,6 +25,7 @@ public class CourseController : ControllerBase
     }
 
     [HttpGet("{id}")]
+    [Authorize(Roles = "Admin,Teacher,Student")]
     public async Task<IActionResult> GetCourseById(int id)
     {
         var course = await _service.GetByIdAsync(id);
@@ -34,20 +37,37 @@ public class CourseController : ControllerBase
     }
 
     [HttpPost]
+    [Authorize(Roles = "Admin,Teacher,Student")]
     public async Task<IActionResult> AddCourse([FromBody] CourseCreateDto dto)
     {
-        await _service.AddAsync(dto);
-        return Ok(new { message = "Course added successfully!" });
+        try
+        {
+            await _service.AddAsync(dto);
+            return Ok(new { message = "Course added successfully!" });
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(new { error = ex.Message });
+        }
     }
 
     [HttpPut("{id}")]
+    [Authorize(Roles = "Admin,Teacher,Student")]
     public async Task<IActionResult> UpdateCourse(int id, [FromBody] CourseUpdateDto dto)
     {
-        await _service.UpdateAsync(id, dto);
-        return Ok(new { message = "Course updated successfully!" });
+        try
+        {
+            await _service.UpdateAsync(id, dto);
+            return Ok(new { message = "Course updated successfully!" });
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(new { error = ex.Message });
+        }
     }
 
     [HttpDelete("{id}")]
+    [Authorize(Roles = "Admin,Teacher,Student")]
     public async Task<IActionResult> DeleteCourse(int id)
     {
         await _service.RemoveAsync(id);

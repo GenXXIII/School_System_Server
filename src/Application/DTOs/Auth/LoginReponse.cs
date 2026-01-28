@@ -1,6 +1,11 @@
 ﻿namespace Application.DTOs.Auth;
 
-public class LoginReponse
+public class LoginResponse
 {
-    
+    public string Token { get; set; }
+
+    public LoginResponse(string token)
+    {
+        Token = token;
+    }
 }

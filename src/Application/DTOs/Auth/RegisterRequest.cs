@@ -1,8 +1,7 @@
-﻿namespace Application.DTOs.Auth;
+namespace Application.DTOs.Auth;
 
-public class RegisterRequest
-{
-    public string Email { get; set; } = default!;
-    public string Password { get; set; } = default!;
-    public string? Role { get; set; }
-}
+public record RegisterRequest(
+    string Email,
+    string Password,
+    string? Role
+);

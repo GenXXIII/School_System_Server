@@ -1,4 +1,4 @@
-﻿using Application.Interfaces.IRepositories;
+using Application.Interfaces.IRepositories;
 using Domain.Entities;
 using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
@@ -15,10 +15,14 @@ public class TeacherRepositories : ITeacherRepositories
     }
     /*{ Get All Students data from DB }*/
     public async Task<IEnumerable<Teacher>> GetAllAsync() => 
-        await _context.Teachers.ToListAsync();
+        await _context.Teachers
+            .Include(t => t.Course)
+            .ToListAsync();
     /*{ Get Student data from DB }*/
     public async Task<Teacher?> GetByIdAsync(int id) =>
-        await _context.Teachers.FindAsync(id);
+        await _context.Teachers
+            .Include(t => t.Course)
+            .FirstOrDefaultAsync(t => t.Id == id);
     /*{ Add Student data from DB }*/
     public async Task AddAsync(Teacher teacher)
     {
@@ -36,7 +40,7 @@ public class TeacherRepositories : ITeacherRepositories
             existteacher.Email = teacher.Email;
             existteacher.Phone = teacher.Phone;
             existteacher.HireDate = teacher.HireDate;
-            existteacher.Department = teacher.Department;
+            existteacher.CourseId = teacher.CourseId;
         }
         await _context.SaveChangesAsync();
     }
@@ -49,5 +53,10 @@ public class TeacherRepositories : ITeacherRepositories
             _context.Teachers.Remove(teachers);
             await _context.SaveChangesAsync();
         }
+    }
+
+    public async Task<bool> IsTeacherIdUniqueAsync(string teacherId)
+    {
+        return !await _context.Teachers.AnyAsync(t => t.TeacherId == teacherId);
     }
 }

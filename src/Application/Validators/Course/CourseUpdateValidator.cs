@@ -13,8 +13,8 @@ public class CourseUpdateValidator : AbstractValidator<CourseCreateDto>
         RuleFor(x => x.CourseName)
             .NotEmpty().WithMessage("Course Name cannot be empty")
             .MaximumLength(50);
-        RuleFor(x => x.Desc)
-            .NotEmpty().WithMessage("Description cannot be empty")
+        RuleFor(x => x.Time)
+            .NotEmpty().WithMessage("Time cannot be empty")
             .MaximumLength(500);
     }
 }

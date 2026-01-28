@@ -1,4 +1,4 @@
-﻿using Application.DTOs.TeacherDTO;
+using Application.DTOs.TeacherDTO;
 using FluentValidation;
 
 namespace Application.Validators.Teacher;
@@ -13,9 +13,8 @@ public class TeacherUpdateValidator : AbstractValidator<TeacherCreateDto>
         RuleFor(x => x.FullName)
             .NotEmpty().WithMessage("Full name cannot be empty")
             .MaximumLength(50);
-        RuleFor(x => x.Department)
-            .NotEmpty().WithMessage("Department cannot be empty")
-            .MaximumLength(50);
+        RuleFor(x => x.CourseId)
+            .NotEmpty().WithMessage("Course cannot be empty");
         RuleFor(x => x.Email)
             .NotEmpty().WithMessage("Email cannot be empty")
             .EmailAddress();
@@ -24,6 +23,6 @@ public class TeacherUpdateValidator : AbstractValidator<TeacherCreateDto>
             .MaximumLength(50);
         RuleFor(x => x.HireDate)
             .NotEmpty().WithMessage("Hire date cannot be empty")
-            .GreaterThanOrEqualTo(DateOnly.FromDateTime(DateTime.Now));
+            .LessThanOrEqualTo(DateOnly.FromDateTime(DateTime.Now));
     }
 }

@@ -1,4 +1,4 @@
-﻿using Domain.Entities;
+using Domain.Entities;
 
 namespace Application.Interfaces.IRepositories;
 
@@ -9,4 +9,5 @@ public interface ITeacherRepositories
     Task AddAsync(Teacher teacher);
     Task UpdateAsync(Teacher teacher);
     Task RemoveAsync(int id);
+    Task<bool> IsTeacherIdUniqueAsync(string teacherId);
 }

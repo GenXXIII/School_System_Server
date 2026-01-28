@@ -1,4 +1,4 @@
-﻿using Application.DTOs.StudentDTO;
+using Application.DTOs.StudentDTO;
 using Domain.Entities;
 using Mapster;
 
@@ -9,7 +9,8 @@ namespace Application.Mapping
         public void Register(TypeAdapterConfig config)
         {
             // ENTITY → DTO (Get)
-            config.NewConfig<Student, StudentDto>();
+            config.NewConfig<Student, StudentDto>()
+                .Map(dest => dest.DepartmentName, src => src.Department != null ? src.Department.DepartmentName : null);
 
             // CREATE DTO → ENTITY
             config.NewConfig<StudentCreateDto, Student>()

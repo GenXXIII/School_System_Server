@@ -1,4 +1,4 @@
-﻿namespace Domain.Entities;
+namespace Domain.Entities;
 
 public class Student
 {
@@ -10,4 +10,9 @@ public class Student
     public string? Email { get; set; }
     public string? Phone { get; set; }
     public string? Address { get; set; }
+    public int Year { get; set; }
+    
+    // Foreign Key
+    public int? DepartmentId { get; set; }
+    public Department? Department { get; set; }
 }

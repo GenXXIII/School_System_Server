@@ -1,4 +1,4 @@
-﻿using Application.Interfaces.IRepositories;
+using Application.Interfaces.IRepositories;
 using Domain.Entities;
 using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
@@ -14,9 +14,15 @@ public class CourseRepositories : ICourseRepositories
         _context = context;
     }
     /*{ Get All Course data from DB }*/
-    public async Task<IEnumerable<Course>> GetAllAsync() => await _context.Courses.ToListAsync();
+    public async Task<IEnumerable<Course>> GetAllAsync() => 
+        await _context.Courses
+            .Include(c => c.Department)
+            .ToListAsync();
     /*{ Get Course data from DB }*/
-    public async Task<Course?> GetByIdAsync(int id) => await _context.Courses.FindAsync(id);
+    public async Task<Course?> GetByIdAsync(int id) => 
+        await _context.Courses
+            .Include(c => c.Department)
+            .FirstOrDefaultAsync(c => c.Id == id);
     /*{ Add Course data from DB }*/
     public async Task AddAsync(Course course)
     {
@@ -31,7 +37,9 @@ public class CourseRepositories : ICourseRepositories
         {
             existcourse.CourseId = course.CourseId;
             existcourse.CourseName = course.CourseName;
-            existcourse.Desc = course.Desc;
+            existcourse.Time = course.Time;
+            existcourse.Year = course.Year;
+            existcourse.DepartmentId = course.DepartmentId;
             await _context.SaveChangesAsync();
         }
 
@@ -45,5 +53,10 @@ public class CourseRepositories : ICourseRepositories
             _context.Courses.Remove(courses);
             await _context.SaveChangesAsync();
         }
+    }
+
+    public async Task<bool> IsCourseIdUniqueAsync(string courseId)
+    {
+        return !await _context.Courses.AnyAsync(c => c.CourseId == courseId);
     }
 }

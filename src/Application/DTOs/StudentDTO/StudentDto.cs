@@ -1,4 +1,4 @@
-﻿namespace Application.DTOs.StudentDTO;
+namespace Application.DTOs.StudentDTO;
 
 public class StudentDto
 {
@@ -10,4 +10,7 @@ public class StudentDto
     public string? Email { get; set; }
     public string? Phone { get; set; }
     public string? Address { get; set; }
+    public int Year { get; set; }
+    public int? DepartmentId { get; set; }
+    public string? DepartmentName { get; set; }
 }

@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Application.Services;
 using Infrastructure.Repositories;
 using Application.Mapping;
-using Application.Validators.Classroom;
+using Application.Validators.Department;
 using Application.Validators.Course;
 using Application.Validators.Student;
 using Application.Validators.Teacher;
@@ -15,6 +15,9 @@ using FluentValidation;
 using FluentValidation.AspNetCore;
 using Api.Middleware;
 using Serilog;
+using Serilog.Events;
+using Serilog.Sinks.PostgreSQL;
+using NpgsqlTypes;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
@@ -24,11 +27,27 @@ using Microsoft.OpenApi.Models;
 var builder = WebApplication.CreateBuilder(args);
 
 // Serilog
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+var columnWriters = new Dictionary<string, ColumnWriterBase>
+{
+    {"message", new RenderedMessageColumnWriter(NpgsqlDbType.Text) },
+    {"level", new LevelColumnWriter(true, NpgsqlDbType.Varchar) },
+    {"timestamp", new UtcTimestampColumnWriter(NpgsqlDbType.TimestampTz) },
+    {"exception", new ExceptionColumnWriter(NpgsqlDbType.Text) },
+    {"log_event", new LogEventSerializedColumnWriter(NpgsqlDbType.Jsonb) }
+};
+
 Log.Logger = new LoggerConfiguration()
     .ReadFrom.Configuration(builder.Configuration) // read from appsettings.json
     .Enrich.FromLogContext()
     .WriteTo.Console()
-    .WriteTo.File("Logs/log-.txt", rollingInterval: RollingInterval.Day)
+    .WriteTo.PostgreSQL(
+        connectionString: connectionString,
+        tableName: "logs",
+        columnOptions: columnWriters,
+        needAutoCreateTable: true,
+        batchSizeLimit: 1,
+        period: TimeSpan.FromSeconds(1))
     .CreateLogger();
 
 builder.Host.UseSerilog();
@@ -47,13 +66,13 @@ builder.Services.AddSwaggerGen(c =>
         Title = "School System API",
         Version = "v1"
     });
-    c.AddSecurityDefinition("Role Management", new OpenApiSecurityScheme
+    c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
         Name = "Authorization",
         Type = SecuritySchemeType.Http,
         Scheme = "Bearer",
         BearerFormat = "JWT",
-        Description = "Token Role"
+        Description = "Enter Role Token :"
     });
 
     c.AddSecurityRequirement(new OpenApiSecurityRequirement
@@ -85,8 +104,8 @@ builder.Services.AddScoped<ITeacherRepositories, TeacherRepositories>();
 builder.Services.AddScoped<ITeacherServices, TeacherServices>();
 builder.Services.AddScoped<ICourseRepositories, CourseRepositories>();
 builder.Services.AddScoped<ICourseServices, CourseServices>();
-builder.Services.AddScoped<IClassroomRepositories, ClassroomRepositories>();
-builder.Services.AddScoped<IClassroomServices, ClassroomServices>();
+builder.Services.AddScoped<IDepartmentRepositories, DepartmentRepositories>();
+builder.Services.AddScoped<IDepartmentServices, DepartmentServices>();
 builder.Services.AddScoped<IUserService, UserService>();
 
 // Mapster
@@ -132,9 +151,7 @@ builder.Services.AddAuthorization();
 
 builder.Services.AddScoped<PasswordService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
-builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IJwtService, JwtService>();
-builder.Services.AddScoped<PasswordService>();
 builder.Services.AddScoped<IAppDbContext>(provider =>
     provider.GetRequiredService<AppDbContext>());
 
@@ -147,10 +164,28 @@ builder.Services.AddValidatorsFromAssembly(typeof(TeacherCreateValidator).Assemb
 builder.Services.AddValidatorsFromAssembly(typeof(TeacherUpdateValidator).Assembly);
 builder.Services.AddValidatorsFromAssembly(typeof(CourseCreateValidator).Assembly);
 builder.Services.AddValidatorsFromAssembly(typeof(CourseUpdateValidator).Assembly);
-builder.Services.AddValidatorsFromAssembly(typeof(ClassroomCreateValidator).Assembly);
-builder.Services.AddValidatorsFromAssembly(typeof(ClassroomUpdateValidator).Assembly);
+builder.Services.AddValidatorsFromAssembly(typeof(DepartmentCreateValidator).Assembly);
+builder.Services.AddValidatorsFromAssembly(typeof(DepartmentUpdateValidator).Assembly);
 
 var app = builder.Build();
+
+// Seed Database
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    try
+    {
+        var context = services.GetRequiredService<AppDbContext>();
+        var passwordService = services.GetRequiredService<PasswordService>();
+        await context.Database.MigrateAsync();
+        await DbSeeder.SeedAsync(context, passwordService);
+    }
+    catch (Exception ex)
+    {
+        var logger = services.GetRequiredService<ILogger<Program>>();
+        logger.LogError(ex, "An error occurred while migrating or seeding the database.");
+    }
+}
 
 // Add Note of Url
 
@@ -158,7 +193,7 @@ app.Lifetime.ApplicationStarted.Register(() =>
 {
     foreach (var url in app.Urls)
     {
-        Console.WriteLine($"🚀 Listening on {url}");
+        Console.WriteLine($"🚀 Listening on {url}/swagger");
     }
 });
 if (app.Environment.IsDevelopment())
@@ -176,3 +211,15 @@ app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
 app.Run();
+
+public class UtcTimestampColumnWriter : ColumnWriterBase
+{
+    public UtcTimestampColumnWriter(NpgsqlDbType dbType = NpgsqlDbType.TimestampTz) : base(dbType)
+    {
+    }
+
+    public override object GetValue(LogEvent logEvent, IFormatProvider? formatProvider = null)
+    {
+        return logEvent.Timestamp.ToUniversalTime();
+    }
+}

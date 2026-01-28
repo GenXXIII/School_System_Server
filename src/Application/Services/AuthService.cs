@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System;
+using System.ComponentModel.DataAnnotations;
 using Application.DTOs.Auth;
 using Application.Interfaces;
 using Application.Interfaces.IServices;
@@ -21,33 +22,47 @@ public class AuthService : IAuthService
         _passwordService = passwordService;
         _jwtService = jwtService;
     }
+
     public async Task RegisterAsync(RegisterRequest request)
     {
-        if (await _context.Users.AnyAsync(x => x.Email == request.Email))
+        var email = request.Email.Trim().ToLowerInvariant();
+
+        if (await _context.Users.AnyAsync(x => x.Email == email))
             throw new ValidationException("Email already exists");
+
+        var passwordHash = _passwordService.Hash(request.Password); // ✅ independent
 
         var user = new User
         {
-            Email = request.Email,
-            Role = request.Role
+            Email = email,
+            PasswordHash = passwordHash,
+            Role = request.Role ?? "User"
         };
-
-        user.PasswordHash = _passwordService.Hash(request.Password, user);
 
         _context.Users.Add(user);
         await _context.SaveChangesAsync();
     }
 
-
-    public async Task<string> LoginAsync(LoginRequest request)
+    public async Task<LoginResponse> LoginAsync(LoginRequest request)
     {
-        var user = await _context.Users
-                       .FirstOrDefaultAsync(x => x.Email == request.Email)
-                   ?? throw new UnauthorizedAccessException("Invalid credentials");
+        var email = request.Email.Trim().ToLowerInvariant();
 
-        if (!_passwordService.Verify(user.PasswordHash, request.Password, user))
+        var user = await _context.Users
+            .FirstOrDefaultAsync(x => x.Email == email);
+
+        if (user == null)
             throw new UnauthorizedAccessException("Invalid credentials");
 
-        return _jwtService.GenerateToken(user.Id, user.Email, user.Role);
+        // ✅ Use correct Verify method
+        if (!_passwordService.Verify(request.Password, user.PasswordHash))
+            throw new UnauthorizedAccessException("Invalid credentials");
+
+        var token = _jwtService.GenerateToken(
+            user.Id,
+            user.Email,
+            user.Role
+        );
+
+        return new LoginResponse(token);
     }
 }
